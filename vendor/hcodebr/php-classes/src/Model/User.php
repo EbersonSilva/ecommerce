@@ -30,19 +30,29 @@ class User extends Model{
 
           return $user;
           
-
-          
       } else {
         throw new \Exception("Usuário inexistente ou senha inválida.");
       }
     }
 
-    public static function verifyLogin(){
-      if(!issets($_SESSION[User::SESSION]) || !$_SESSION[User::SESSION] || !(int)$_SESSION[User::SESSION]["iduser"]){
+    public static function verifyLogin($inadmin = true)
+    {
+      if(
+        !isset($_SESSION[User::SESSION]) 
+        || 
+        !$_SESSION[User::SESSION] 
+        || 
+        !(int)$_SESSION[User::SESSION]["iduser"] > 0 
+        || 
+        (bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin
+      ){
         header("Location: /admin/login");
         exit; 
         
       }
+    }
+    public static function logout(){
+      $_SESSION[User::SESSION] = NULL;
     }
 
 } 
